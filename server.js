@@ -2,17 +2,22 @@ import express, { json } from 'express';
 import cors from 'cors';
 import { textQuery } from "./use-cases/chatbot.js";
 import { CustomerRepository } from './db/customer-repository.js';
+import { ProductsRepository } from './db/products-repository.js';
 
 
 const app = express()
 const port = process.env.PORT || 3030;
 
 const customerRepository = new CustomerRepository();
+const prductsRepository = new ProductsRepository();
 
-console.log();
 
 app.get("/customers", async (req, res) => {
      res.send(customerRepository.list())
+})
+
+app.get("/products", async (req, res) => {
+    res.send(prductsRepository.list())
 })
 
 app.post("/chat", json(), async (req, res) => {
@@ -26,16 +31,17 @@ app.post("/chat", json(), async (req, res) => {
     }
     const fields = responseObject.customerParams.fields
 
-    console.log(fields)
-
     if(JSON.stringify(fields) !== "{}"){
-        if(fields.CPF.stringValue !== ""){
+        if(fields.CPF.stringValue !== "" && fields.name.stringValue !== "" && fields.email.stringValue !== ""){
             customerRepository.create({
-                CPF: fields.CPF.stringValue
+                CPF: fields.CPF.stringValue,
+                name: fields.name.stringValue,
+                email: fields.email.stringValue
             })
         }
     }
-    res.send(responseObject)
+    res.send(resultQuery)
+    // res.send(responseObject)
 })
 
 app.listen(port, () => {
