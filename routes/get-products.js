@@ -1,10 +1,10 @@
 import express from "express";
-import { ProductsRepository } from "../db/products-repository.js";
+import { productRepository } from "../server.js";
 
 
 export const getProducts = express.Router();
-const productsRepository = new ProductsRepository();
 
 getProducts.get("/", async (req, res) => {
-    res.send(productsRepository.list())
+    const search = req.query.search
+    res.send(productRepository.list(search))
 })

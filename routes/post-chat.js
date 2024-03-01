@@ -14,17 +14,6 @@ postChat.post("/", json(), async (req, res) => {
         customerParams: resultQuery[0].queryResult.parameters
     }
     const fields = responseObject.customerParams.fields
-
-    if(JSON.stringify(fields) !== "{}"){
-        if(fields.CPF.stringValue !== "" && fields.name.stringValue !== "" && fields.email.stringValue !== ""){
-            console.log("validação feita criando usuário")
-            customerRepository.create({
-                CPF: fields.CPF.stringValue,
-                name: fields.name.stringValue,
-                email: fields.email.stringValue
-            })
-        }
-    }
     // res.send(resultQuery)
     res.send(responseObject)
 })
